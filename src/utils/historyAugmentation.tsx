@@ -31,11 +31,11 @@ export function setupHistoryAugmentationOnce({
     };
   }
 
+  const initialState = window.history.state ?? {};
   renderedStateRef.current.index =
-    parseInt(window.history.state.__next_navigation_guard_stack_index) || 0;
+    parseInt(initialState.__next_navigation_guard_stack_index) || 0;
   renderedStateRef.current.token =
-    String(window.history.state.__next_navigation_guard_token ?? "") ||
-    newToken();
+    String(initialState.__next_navigation_guard_token ?? "") || newToken();
 
   if (DEBUG)
     console.log(
@@ -49,7 +49,7 @@ export function setupHistoryAugmentationOnce({
       );
 
     const modifiedState = {
-      ...window.history.state,
+      ...(window.history.state ?? {}),
       __next_navigation_guard_token: renderedStateRef.current.token,
       __next_navigation_guard_stack_index: renderedStateRef.current.index,
     };
@@ -63,8 +63,8 @@ export function setupHistoryAugmentationOnce({
   };
 
   if (
-    window.history.state.__next_navigation_guard_stack_index == null ||
-    window.history.state.__next_navigation_guard_token == null
+    initialState.__next_navigation_guard_stack_index == null ||
+    initialState.__next_navigation_guard_token == null
   ) {
     writeState();
   }
